@@ -10,7 +10,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     character_favorite = db.relationship('Character_favorite', lazy=True)
-    planet_favorite = db.relationship('Planet_favorite', lazy=True)
+    planet_favorite = db.relationship('Planet_favorite', backref='author', lazy='dynamic',
+                        primaryjoin="User.id == Planet_favorite.user_id")
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -61,8 +62,8 @@ class Planet(db.Model):
 
 class Character_favorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey('User.id'), unique=True, nullable=False)
-    character_id = db.Column(db.Integer, ForeignKey('Character.id'), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey('user.id'), unique=True, nullable=False)
+    character_id = db.Column(db.Integer, ForeignKey('character.id'), unique=True, nullable=False)
 
 
     def __repr__(self):
@@ -77,8 +78,8 @@ class Character_favorite(db.Model):
 
 class Planet_favorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey('User.id'), unique=True, nullable=False)
-    planet_id = db.Column(db.Integer, ForeignKey('Planet.id'), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey('user.id'), unique=True, nullable=False)
+    planet_id = db.Column(db.Integer, ForeignKey('planet.id'), unique=True, nullable=False)
 
 
     def __repr__(self):

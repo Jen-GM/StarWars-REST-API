@@ -52,7 +52,7 @@ def get_characters(id):
 
     return jsonify(result), 200
 
-@app.route('/character/<int:planet_id>', methods=['GET'])
+@app.route('/planet/<int:planet_id>', methods=['GET'])
 def get_planet(planet_id):
     character = Character.query.get(planet_id)
     result = {
