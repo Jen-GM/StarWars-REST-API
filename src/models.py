@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column, ForeignKey, Integer, String
+""" from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey, Integer, String """
 
 
 db = SQLAlchemy()
@@ -9,7 +9,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
-    is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    is_favorite = db.Column(db.Boolean(), unique=False, nullable=False)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -18,7 +18,6 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            # do not serialize the password, its a security breach
         }
 
 class Character(db.Model):
@@ -55,7 +54,7 @@ class Planet(db.Model):
             "terrain": self.hair_color,
         }
 
-class Character_favorite(db.Model):
+""" class Character_favorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     character_id = db.Column(db.Integer, ForeignKey('characters.id'), unique=True, nullable=False)
     user_id = db.Column(db.Integer, ForeignKey('user.id'), unique=True, nullable=False)
@@ -85,4 +84,4 @@ class Planet_favorite(db.Model):
         return {
             "id": self.id,
             "character_id": self.character_id
-        }
+        } """
