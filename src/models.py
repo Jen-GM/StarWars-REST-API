@@ -27,7 +27,7 @@ class Character(db.Model):
     gender = db.Column(db.String(50), unique=False, nullable=True)
     hair_color = db.Column(db.String(50), unique=False, nullable=True)
     eye_color = db.Column(db.String(80), unique=False, nullable=True)
-    Character_favorite = db.relationship('character_favorite', lazy=True)
+    character_favorite = db.relationship('Character_favorite', lazy=True)
 
     def __repr__(self):
         return '<Character %r>' % self.name
@@ -37,7 +37,8 @@ class Character(db.Model):
             "id": self.id,
             "gender": self.gender,
             "hair_color": self.hair_color,
-            "eye_color": self.eye_color
+            "eye_color": self.eye_color,
+            "character_favorite": self.character_favorite
         }
         
 class Planet(db.Model):
@@ -45,7 +46,7 @@ class Planet(db.Model):
     name = db.Column(db.String(120), unique=True, nullable=False)
     population = db.Column(db.String(50), unique=False, nullable=True)
     terrain = db.Column(db.String(50), unique=False, nullable=True)
-    Planet_favorite = db.relationship('planet_favorite', lazy=True)
+    planet_favorite = db.relationship('Planet_favorite', lazy=True)
 
     def __repr__(self):
         return '<Planet %r>' % self.name
@@ -55,12 +56,13 @@ class Planet(db.Model):
             "id": self.id,
             "population": self.gender,
             "terrain": self.hair_color,
+            "planet_favorite": self.planet_favorite
         }
 
 class Character_favorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey('user.id'), unique=True, nullable=False)
-    character_id = db.Column(db.Integer, ForeignKey('character.id'), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey('User.id'), unique=True, nullable=False)
+    character_id = db.Column(db.Integer, ForeignKey('Character.id'), unique=True, nullable=False)
 
 
     def __repr__(self):
@@ -69,13 +71,14 @@ class Character_favorite(db.Model):
     def serialize(self):
         return {
             "id": self.id,
+            "user_id": self.user_id,
             "character_id": self.character_id
         }
 
 class Planet_favorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey('user.id'), unique=True, nullable=False)
-    planet_id = db.Column(db.Integer, ForeignKey('planet.id'), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, ForeignKey('User.id'), unique=True, nullable=False)
+    planet_id = db.Column(db.Integer, ForeignKey('Planet.id'), unique=True, nullable=False)
 
 
     def __repr__(self):
@@ -84,5 +87,6 @@ class Planet_favorite(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "character_id": self.character_id
+            "user_id": self.user_id,
+            "planet_id": self.planet_id
         }
