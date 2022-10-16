@@ -54,12 +54,27 @@ def get_characters(id):
 
 @app.route('/planet/<int:planet_id>', methods=['GET'])
 def get_planet(planet_id):
-    character = Character.query.get(planet_id)
+    character = Planet.query.get(planet_id)
     result = {
-        "planeta": {planet_id}
+        "planeta": planet_id
     }
 
     return jsonify(result), 200
+
+@app.route('planet_favorite/<int:planet_id>', methods=['POST'])
+def favorite_planet(planet_id, user_id):
+    addPlanet= Planet.query.get(planet_id)
+    addUser= User.query.get(user_id)
+    planeta_favorito[addUser] = addPlanet
+    print(planeta_favorito)
+
+    result = {
+        addUser: addPlanet
+    }
+
+
+
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
