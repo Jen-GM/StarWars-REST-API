@@ -70,7 +70,7 @@ class Character_favorite(db.Model):
     character_id = db.Column(db.Integer, ForeignKey(
         'character.id'))
     user = db.relationship('User')
-    characters = db.relationship('Character')
+    favorite_characters = db.relationship('Character')
 
     def __repr__(self):
         return '<Character_favorite %r>' % self.id
@@ -90,7 +90,7 @@ class Planet_favorite(db.Model):
     planet_id = db.Column(db.Integer, ForeignKey(
         'planet.id'))
     user = db.relationship('User')
-    planet = db.relationship('Planet')
+    favorite_planets = db.relationship('Planet')
 
     def __repr__(self):
         return '<Planet_favorite %r>' % self.id
