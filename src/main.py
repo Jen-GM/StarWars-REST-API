@@ -30,6 +30,7 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+#GET for all the users
 @app.route('/user', methods=['GET'])
 def get_users():
     users = User.query.filter().all()
@@ -41,9 +42,21 @@ def get_users():
 
     return jsonify(response_body), 200
 
+#GET for all the characters
+@app.route('/character', methods=['GET'])
+def get_characters():
+    characters = Character.query.filter().all()
+    result = list(map(lambda character: character.serialize(), characters))
+    
+    response_body = {
+        "character": result
+    }
 
+    return jsonify(response_body), 200
+
+#GET for each character by ID
 @app.route('/character/<int:id>', methods=['GET'])
-def get_characters(id):
+def get_characters_byID(id):
     character = Character.query.get(id)
     print(character.serialize())
     result = {
@@ -52,27 +65,52 @@ def get_characters(id):
 
     return jsonify(result), 200
 
-@app.route('/planet/<int:planet_id>', methods=['GET'])
-def get_planet(planet_id):
-    planet = Planet.query.get(planet_id)
+#GET for all the planets
+@app.route('/planet', methods=['GET'])
+def get_planet():
+    planets = Planet.query.filter().all()
+    result = list(map(lambda planet: planet.serialize(), planets))
+    
+    response_body = {
+        "planet": result
+    }
+
+    return jsonify(response_body), 200
+
+#GET for each planet by ID
+@app.route('/planet/<int:id>', methods=['GET'])
+def get_planet_byID(id):
+    planet = Planet.query.get(id)
     print(planet.serialize())
     result = {
-        "planeta": planet_id
+        "planeta": planet.serialize()
     }
 
     return jsonify(result), 200
 
-@app.route('/planet_favorite/<int:planet_id>', methods=['POST'])
-def favorite_planet(planet_id, user_id):
-    addPlanet= Planet.query.get(planet_id)
-    addUser= User.query.get(user_id)
-    planeta_favorito[addUser] = addPlanet
-    print(planeta_favorito)
+#GET for the favorites planets
+@app.route('/planet_favorite/<int:user_id>', methods=['GET'])
+def favorite_planet(user_id):
+    Fav_Planet= Planet_favorite.query.filter_by(user_id=user_id)
+    result = list(map(lambda favorite: favorite.serialize(), favorite_planet))
 
     result = {
-        addUser: addPlanet
+        "favorite_planet" : result
     }
 
+    return jsonify(result), 200
+
+#GET for the favorites characters
+@app.route('/character_favorite/<int:user_id>', methods=['GET'])
+def favorite_character(user_id):
+    Fav_Character= Character_favorite.query.filter_by(user_id=user_id)
+    result = list(map(lambda favorite: favorite.serialize(), favorite_character))
+
+    result = {
+        "favorite_character" : result
+    }
+
+    return jsonify(result), 200
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
