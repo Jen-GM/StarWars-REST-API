@@ -67,17 +67,6 @@ def get_characters_byID(id):
 
     return jsonify(result), 200
 
-#GET for the favorites characters
-@app.route('/character_favorite/<int:user_id>', methods=['GET'])
-def favorite_character(user_id):
-    Fav_Character= Character_favorite.query.filter_by(user_id=user_id)
-    result = list(map(lambda favorite: favorite.serialize(), favorite_character))
-
-    result = {
-        "favorite_character" : result
-    }
-
-    return jsonify(result), 200
 
 #POST for adding favorite characters
 @app.route('/character_favorite/<int:character_id>/<int:user_id>', methods=['POST'])
@@ -85,10 +74,36 @@ def post_favorite_character(character_id, user_id):
     favorite_character = Character_favorite(character_id=character_id, user_id=user_id)
     db.session.add(favorite_character)
     db.session.commit()
-    response_body = {
-    "msg": "personaje favorito agregado"
+    result = {
+    "Respuesta": "personaje favorito agregado"
     }
-    return jsonify(response_body), 200
+    return jsonify(result), 200
+
+#DELETE the unwanted character
+@app.route('/character_favorite/<int:user_id>/<int:character_id>', methods=['DELETE'])
+def delete_character(user_id, character_id):
+    delete_favorite_character = Character_favorite.query.filter_by(user_id=user_id, character_id=character_id).first()
+    if delete_favorite_character is None:
+        return jsonify({"Respuesta": "No existe el personaje a eliminar"})
+    db.session.delete(delete_favorite_character)
+    db.session.commit()
+
+    result = {
+    "Respuesta": "personaje favorito eliminado"
+    }
+    return jsonify(result), 200
+
+#GET for the favorites characters
+@app.route('/character_favorite/<int:user_id>', methods=['GET'])
+def favorite_character(user_id):
+    Fav_Character= Character_favorite.query.filter_by(user_id=user_id)
+    result = list(map(lambda favorite: favorite.serialize(), Fav_Character))
+
+    result = {
+        "favorite_character" : result
+    }
+
+    return jsonify(result), 200
 
 #############################################     PLANETS FUNCTIONALITIES  ################################
 
@@ -121,17 +136,31 @@ def post_favorite_planet(planet_id, user_id):
     favorite_planet = Planet_favorite(planet_id=planet_id, user_id=user_id)
     db.session.add(favorite_planet)
     db.session.commit()
-    response_body = {
-    "msg": "planeta favorito agregado"
+    
+    result = {
+    "Respuesta": "Planeta favorito agregado"
     }
-    return jsonify(response_body), 200
+    return jsonify(result), 200
 
+#DELETE the unwanted planet *****
+@app.route('/planet_favorite/<int:user_id>/<int:planet_id>', methods=['DELETE'])
+def delete_planet(user_id, planet_id):
+    delete_favorite_planet = Planet_favorite.query.filter_by(user_id=user_id, planet_id=planet_id).first()
+    if delete_favorite_planet is None:
+        return jsonify({"Respuesta": "No existe el planeta a eliminar"})
+    db.session.delete(delete_favorite_planet)
+    db.session.commit()
+
+    result = {
+    "Respuesta": "Planeta favorito eliminado"
+    }
+    return jsonify(result), 200 
 
 #GET for the favorites planets
 @app.route('/planet_favorite/<int:user_id>', methods=['GET'])
 def get_favorite_planet(user_id):
     Fav_Planet= Planet_favorite.query.filter_by(user_id=user_id)
-    result = list(map(lambda favorite: favorite.serialize(), favorite_planet))
+    result = list(map(lambda favorite: favorite.serialize(), Fav_Planet))
 
     result = {
         "favorite_planet" : result

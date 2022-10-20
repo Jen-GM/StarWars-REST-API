@@ -8,12 +8,13 @@ db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(120), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
-    character_favorite = db.relationship('Character_favorite', backref='favorite_character', lazy='dynamic',
+    """ character_favorite = db.relationship('Character_favorite', backref='favorite_character', lazy='dynamic',
                                          primaryjoin="User.id == Character_favorite.user_id")
     planet_favorite = db.relationship('Planet_favorite', backref='favorite_character', lazy='dynamic',
-                                      primaryjoin="User.id == Planet_favorite.user_id")
+                                      primaryjoin="User.id == Planet_favorite.user_id") """
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -21,6 +22,7 @@ class User(db.Model):
     def serialize(self):
         return {
             "id": self.id,
+            "username": self.username,
             "email": self.email
         }
 
@@ -48,7 +50,7 @@ class Character(db.Model):
 class Planet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), unique=True, nullable=False)
-    population = db.Column(db.String(50), unique=False, nullable=True)
+    population = db.Column(db.Integer, unique=False, nullable=True)
     terrain = db.Column(db.String(50), unique=False, nullable=True)
 
     def __repr__(self):
