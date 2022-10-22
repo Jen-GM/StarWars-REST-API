@@ -58,6 +58,7 @@ class Planet(db.Model):
     def serialize(self):
         return {
             "id": self.id,
+            "img_URL_planet": self.img_URL_planet,
             "name": self.name,
             "population": self.population,
             "terrain": self.terrain

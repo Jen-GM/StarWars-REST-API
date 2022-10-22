@@ -37,20 +37,6 @@ def sitemap():
     return generate_sitemap(app)
 
 
-
-#############################################     User FUNCTIONALITIES  ################################
-#GET for all the users
-@app.route('/user', methods=['GET'])
-def get_users():
-    users = User.query.filter().all()
-    result = list(map(lambda user: user.serialize(), users))
-
-    response_body = {
-        "user": result
-    }
-
-    return jsonify(response_body), 200
-
 #############################################     SECURITY  ################################
 # Creating a token and return JWTs.
 # create_access_token() function is used to actually generate the JWT.
@@ -64,7 +50,18 @@ def login():
     access_token = create_access_token(identity=username)
     return jsonify(access_token=access_token)
 
+#############################################     User FUNCTIONALITIES  ################################
+#GET for all the users
+@app.route('/user', methods=['GET'])
+def get_users():
+    users = User.query.filter().all()
+    result = list(map(lambda user: user.serialize(), users))
 
+    response_body = {
+        "user": result
+    }
+
+    return jsonify(response_body), 200
 
 
 #############################################     CHARACTERS FUNCTIONALITIES  ################################
