@@ -11,10 +11,6 @@ class User(db.Model):
     username = db.Column(db.String(120), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
-    """ character_favorite = db.relationship('Character_favorite', backref='favorite_character', lazy='dynamic',
-                                         primaryjoin="User.id == Character_favorite.user_id")
-    planet_favorite = db.relationship('Planet_favorite', backref='favorite_character', lazy='dynamic',
-                                      primaryjoin="User.id == Planet_favorite.user_id") """
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -29,9 +25,10 @@ class User(db.Model):
 
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    img_URL_character= db.Column(db.String(120), unique=True, nullable=False)
     name = db.Column(db.String(120), unique=True, nullable=False)
     gender = db.Column(db.String(50), unique=False, nullable=True)
-    hair_color = db.Column(db.String(50), unique=False, nullable=True)
+    skin_color = db.Column(db.String(50), unique=False, nullable=True)
     eye_color = db.Column(db.String(80), unique=False, nullable=True)
 
     def __repr__(self):
@@ -40,16 +37,18 @@ class Character(db.Model):
     def serialize(self):
         return {
             "id": self.id,
+            "img_URL_character": self.img_URL_character,
             "name": self.name,
             "gender": self.gender,
-            "hair_color": self.hair_color,
+            "skin_color": self.skin_color,
             "eye_color": self.eye_color
         }
 
 
 class Planet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), unique=True, nullable=False)
+    img_URL_planet= db.Column(db.String(120), unique=True, nullable=False)
+    name = db.Column(db.String(80), unique=True, nullable=False)
     population = db.Column(db.Integer, unique=False, nullable=True)
     terrain = db.Column(db.String(50), unique=False, nullable=True)
 
