@@ -9,7 +9,10 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User, Character, Planet, Planet_favorite, Character_favorite
-#from models import Person
+from flask_jwt_extended import JWTManager
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -19,6 +22,9 @@ MIGRATE = Migrate(app, db)
 db.init_app(app)
 CORS(app)
 setup_admin(app)
+# Setup the Flask-JWT-Extended extension
+app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET_PASSWORD')
+jwt = JWTManager(app)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
@@ -30,6 +36,9 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+
+
+#############################################     User FUNCTIONALITIES  ################################
 #GET for all the users
 @app.route('/user', methods=['GET'])
 def get_users():
@@ -41,6 +50,22 @@ def get_users():
     }
 
     return jsonify(response_body), 200
+
+#############################################     SECURITY  ################################
+# Creating a token and return JWTs.
+# create_access_token() function is used to actually generate the JWT.
+@app.route("/token", methods=["POST"])
+def login():
+    username = request.json.get("username", None)
+    password = request.json.get("password", None)
+    if username != "admin" or password != "admin":
+        return jsonify({"msg": "Bad credentials"}), 401
+
+    access_token = create_access_token(identity=username)
+    return jsonify(access_token=access_token)
+
+
+
 
 #############################################     CHARACTERS FUNCTIONALITIES  ################################
 
